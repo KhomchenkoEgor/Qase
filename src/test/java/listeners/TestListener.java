@@ -1,13 +1,10 @@
 package listeners;
 
 import com.codeborne.selenide.WebDriverRunner;
-import io.qameta.allure.Attachment;
 import lombok.extern.log4j.Log4j2;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
-
+import utils.AllureUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -32,13 +29,10 @@ public class TestListener implements ITestListener {
         log.error("======== FAILED TEST: {} | Duration: {}s ========",
                 result.getName(),
                 getExecutionTime(result));
-//        takeScreenshot();
-    }
-
-    @Attachment(value = "Screenshot on failure", type = "image/png")
-    private byte[] takeScreenshot() {
-        return ((TakesScreenshot) WebDriverRunner.getWebDriver())
-                .getScreenshotAs(OutputType.BYTES);
+        if (WebDriverRunner.hasWebDriverStarted()) {
+            log.error("Failed URL: {}", WebDriverRunner.url());
+            AllureUtils.takeScreenshot(WebDriverRunner.getWebDriver());
+        }
     }
 
     @Override
@@ -53,4 +47,3 @@ public class TestListener implements ITestListener {
         );
     }
 }
-

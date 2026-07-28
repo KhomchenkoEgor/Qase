@@ -1,13 +1,11 @@
 package tests.api;
 
-import adapters.CaseAdapter;
-import adapters.ProjectAdapter;
+import api.adapters.CaseAdapter;
 import io.qameta.allure.*;
 import lombok.extern.log4j.Log4j2;
-import models.cases.CaseRq;
-import models.cases.CaseRs;
-import models.cases.Step;
-import models.project.ProjectRq;
+import api.models.cases.CaseRq;
+import api.models.cases.CaseRs;
+import api.models.cases.Step;
 import org.testng.annotations.*;
 
 import java.util.List;
@@ -19,23 +17,7 @@ import static org.testng.Assert.*;
 @Feature("Тест-кейсы")
 @Story("CRUD операции над тест-кейсами")
 @Owner("Khomchenko E.S.")
-public class CaseApiTest {
-
-    private final String projectCode = "QA34" + (int)(Math.random() * 100000);
-
-    @BeforeMethod(alwaysRun = true)
-    public void createProjectBeforeTest() {
-        log.info("API Предусловие: Инициализация изолированного репозитория через ИИ");
-        ProjectRq projectRq = ProjectRq.builder()
-                .title("Automation Project " + projectCode)
-                .code(projectCode)
-                .description("Временный проект для API тестов")
-                .access("all")
-                .build();
-
-        var projectRs = ProjectAdapter.createProject(projectRq);
-        assertTrue(projectRs.getStatus(), "Не удалось создать проект перед тестами!");
-    }
+public class CaseApiTest extends BaseApiTest{
 
     @Test(
             testName = "Полный CRUD тест-кейса через API",
@@ -71,12 +53,9 @@ public class CaseApiTest {
                 .build();
 
         CaseRs createdCase = CaseAdapter.createCase(rq, projectCode);
-
         assertTrue(createdCase.getStatus(), "Case was not created!");
         assertNotNull(createdCase.getResult(), "Result is NULL");
-
         Integer caseId = createdCase.getResult().getId();
-
         CaseRq updateRq = CaseRq.builder()
                 .title("updated_title")
                 .description("updated")
@@ -90,16 +69,8 @@ public class CaseApiTest {
                 .build();
 
         CaseAdapter.updateCase(updateRq, projectCode, caseId);
-
         CaseRs updatedCase = CaseAdapter.getCase(projectCode, caseId);
         assertEquals(updatedCase.getResult().getId(), caseId);
-
         CaseAdapter.deleteCase(projectCode, caseId);
-    }
-
-    @AfterMethod(alwaysRun = true)
-    public void deleteProjectAfterTest() {
-        log.info("API Postcondition: Удаление временного проекта {}", projectCode);
-        ProjectAdapter.deleteProject(projectCode);
     }
 }

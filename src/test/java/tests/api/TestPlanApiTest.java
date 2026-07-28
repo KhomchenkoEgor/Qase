@@ -1,18 +1,16 @@
 package tests.api;
 
-import adapters.CaseAdapter;
-import adapters.PlanAdapter;
-import adapters.ProjectAdapter;
+import api.adapters.CaseAdapter;
+import api.adapters.PlanAdapter;
 import io.qameta.allure.*;
 import lombok.extern.log4j.Log4j2;
-import models.cases.CaseRq;
-import models.plan.PlanRq;
-import models.plan.PlanRs;
-import models.project.ProjectRq;
-import org.testng.annotations.AfterMethod;
+import api.models.cases.CaseRq;
+import api.models.plan.PlanRq;
+import api.models.plan.PlanRs;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import utils.QwenDataGenerator;
+
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
@@ -23,20 +21,15 @@ import static org.testng.Assert.assertTrue;
 @Feature("Тест-планы")
 @Story("Релизные тест-планы и привязка тест-кейсов")
 @Owner("Khomchenko E.S.")
-public class TestPlanApiTest {
+public class TestPlanApiTest extends BaseApiTest {
 
-    private String projectCode;
     private Integer caseId;
 
     @BeforeMethod(alwaysRun = true)
-    public void prepareData() {
-        log.info("API Предусловие: Сборка репозитория и базового кейса под будущий тест-план");
-        ProjectRq projectRq = QwenDataGenerator.generateProjectData();
-        projectCode = projectRq.getCode();
-        ProjectAdapter.createProject(projectRq);
-
+    public void prepareCase() {
+        log.info("API Предусловие: Создание базового кейса");
         CaseRq caseRq = QwenDataGenerator.generateTestCaseData();
-        var caseRs = CaseAdapter.createCase(caseRq, projectCode);
+        var caseRs = CaseAdapter.createCase(caseRq,projectCode);
         caseId = caseRs.getResult().getId();
     }
 
@@ -60,11 +53,5 @@ public class TestPlanApiTest {
                 "ID тест-кейса внутри плана сохранился некорректно!");
         PlanAdapter.deletePlan(projectCode, planId);
         log.info("План ID {} успешно деинсталлирован.", planId);
-    }
-
-    @AfterMethod(alwaysRun = true)
-    public void cleanup() {
-        log.info("API Очистка: Снос проекта {}", projectCode);
-        ProjectAdapter.deleteProject(projectCode);
     }
 }

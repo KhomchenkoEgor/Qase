@@ -1,14 +1,13 @@
 package utils;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import models.cases.CaseRq;
-import models.plan.PlanRq;
-import models.project.ProjectRq;
-import models.suite.SuiteRq;
+import api.models.cases.CaseRq;
+import api.models.plan.PlanRq;
+import api.models.project.ProjectRq;
+import api.models.suite.SuiteRq;
 
 import java.util.List;
 import java.util.Map;
@@ -75,10 +74,8 @@ public class QwenDataGenerator {
         try {
             jsonResponse = generateJsonViaLlm(prompt);
             ProjectRq dto = GSON.fromJson(jsonResponse, ProjectRq.class);
-
             dto.setAccess("all");
             dto.setGroup(null);
-
             return dto;
         } catch (Exception e) {
             System.err.println("Ошибка парсинга данных проекта. Применен фолбэк.");
@@ -154,7 +151,6 @@ public class QwenDataGenerator {
                 "Output ONLY a raw text string, no JSON, no quotes, no formatting.";
 
         String response = generateJsonViaLlm(prompt);
-
         return response.replaceAll("\"", "").replaceAll("\\{", "").replaceAll("\\}", "").trim();
     }
 
@@ -167,8 +163,6 @@ public class QwenDataGenerator {
         } else if (prompt.contains("steps")) {
             return "{\"title\":\"Fallback Case Request\",\"severity\":2,\"priority\":2,\"status\":1}";
         } else if (prompt.contains("cases")) {
-            // ТАК КАК ПЛАН ТРЕБУЕТ КЕЙСЫ: Возвращаем структуру с дефолтным массивом [1]
-            // На этапе создания плана это поле провалидируется, а в самом тесте ассерт assertEquals проверит id
             return "{\"title\":\"Fallback Plan Release\",\"description\":\"Резервный план\",\"cases\":[1]}";
         } else {
             return "{\"title\":\"Fallback Plan Release\",\"description\":\"Резервный план\"}";

@@ -1,16 +1,15 @@
 package tests.api;
 
-import adapters.ProjectAdapter;
+import api.adapters.ProjectAdapter;
 import io.qameta.allure.*;
 import lombok.extern.log4j.Log4j2;
-import models.project.ProjectRq;
-import models.project.ProjectRs;
-import org.testng.Assert;
+import api.models.project.ProjectRq;
+import api.models.project.ProjectRs;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import utils.QwenDataGenerator;
 
-import static adapters.ProjectAdapter.createProject;
+import static api.adapters.ProjectAdapter.createProject;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 

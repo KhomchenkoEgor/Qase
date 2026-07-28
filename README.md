@@ -1,4 +1,4 @@
-# QASE.io Test Automation Framework
+# Qase.io UI & API Test Automation Framework
 
 Проект представляет собой модульный фреймворк для автоматизации тестирования UI и API функционала системы управления тест-кейсами **Qase.io**. 
 
@@ -65,6 +65,57 @@
 
 ---
 
+### 📂 Структура проекта
+
+```text
+src
+└── test
+    ├── java
+    │   ├── adapters           # Слой API-адаптеров (RestAssured обертки для сущностей Qase)
+    │   │   ├── BaseAdapter.java
+    │   │   ├── CaseAdapter.java
+    │   │   ├── PlanAdapter.java
+    │   │   ├── ProjectAdapter.java
+    │   │   └── SuiteAdapter.java
+    │   ├── dict               # Словари, константы и статические тексты приложения
+    │   │   └── Elements.java
+    │   ├── listeners          # Слушатели TestNG (логирование, скриншоты Allure на failure)
+    │   │   ├── RetryListener.java
+    │   │   └── TestListener.java
+    │   ├── models             # DTO / POJO модели для сериализации/десериализации Jackson/Gson
+    │   │   ├── cases          # Модели запросов и ответов для Тест-кейсов (CaseRq, CaseRs, Step)
+    │   │   ├── plan           # Модели для Тест-планов
+    │   │   ├── project        # Модели для Проектов
+    │   │   └── suite          # Модели для Тест-сьютов
+    │   ├── pages              # Слой UI-страниц (Паттерн Page Object Model на Selenide)
+    │   │   ├── LoginPage.java
+    │   │   ├── ProjectPage.java
+    │   │   ├── ProjectsPage.java
+    │   │   └── TestPlanPage.java
+    │   ├── tests              # Слой тест-сценариев
+    │   │   ├── api            # Изолированные API-тесты (компонентные и CRUD)
+    │   │   │   ├── BaseApiTest.java
+    │   │   │   ├── CaseApiTest.java
+    │   │   │   ├── ProjectApiTest.java
+    │   │   │   └── SuiteApiTest.java
+    │   │   └── ui             # UI-тесты (включая гибридные E2E сценарии)
+    │   │       ├── BaseTest.java
+    │   │       ├── LoginTest.java
+    │   │       ├── ProjectTest.java
+    │   │       ├── SuiteUiTest.java
+    │   │       └── TestPlanUiTest.java
+    │   └── utils              # Утилитарные классы (чтение конфигов, AI-генератор, перезапуски)
+    │       ├── AllureUtils.java
+    │       ├── PropertyReader.java
+    │       ├── QwenDataGenerator.java  # Модуль интеграции с Ollama API (Qwen LLM)
+    │       └── Retry.java
+    └── resources
+        ├── schemas            # JSON-схемы для валидации контрактов API (.json)
+        ├── config.properties  # Файл конфигурации (в репозитории хранится шаблон template)
+        └── testng.xml         # Файл конфигурации последовательного запуска тестов TestNG
+```
+---
+
 ## 🚀 Локальный запуск проекта
 
 1. Клонируйте репозиторий:
@@ -81,3 +132,83 @@
    ```bash
    mvn allure:serve
    ```
+## 🔄 Настройка Непрерывной Интеграции (CI/CD)
+
+Так как тесты завязаны на LLM-модель, агенты сборщиков должны иметь доступ к Ollama. Ниже представлены готовые конфигурации для автоматического развертывания окружения.
+
+### 🔹 GitHub Actions (`.github/workflows/maven.yml`)
+Создайте файл по указанному пути в корне проекта. Сценарий автоматически поднимет Docker-контейнер Ollama на стороне GitHub-раннера, скачает модель Qwen, запустит тесты в режиме Chrome Headless и опубликует Allure-отчет на GitHub Pages.
+
+```yaml
+name: Qase.io AI Regression CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      # Поднимаем локальную Ollama в Docker-контейнере прямо на раннере GitHub
+      ollama:
+        image: ollama/ollama:latest
+        ports:
+          - 11434:11434
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Pull Qwen Model inside Container
+      run: |
+        curl http://localhost:11434/api/pull -d '{"name": "qwen2.5-coder:7b"}'
+
+    - name: Run Regression Tests (Headless)
+      run: mvn clean test -Dselenide.headless=true
+      env:
+        # Передаем секреты из настроек репозитория GitHub
+        QASE_TOKEN: ${{ secrets.QASE_TOKEN }}
+        QASE_USER: ${{ secrets.QASE_USER }}
+        QASE_PASSWORD: ${{ secrets.QASE_PASSWORD }}
+
+    - name: Get Allure History
+      final: always()
+      uses: actions/checkout@v4
+      if: always()
+      with:
+        ref: gh-pages
+        path: gh-pages
+
+    - name: Generate Allure Report
+      uses: simple-elf/allure-report-action@master
+      if: always()
+      with:
+        allure_results: target/allure-results
+        allure_history: allure-history
+
+    - name: Deploy Allure to GitHub Pages
+      if: always()
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: allure-history
+```
+
+---
+
+ 🛡️ Best Practices & Стабилизация паттернов
+
+* **API-Seeding в UI-тестах:** Для тяжелых тестов (например, сборка тест-планов) создание проекта и наполнение его тест-кейсами происходит мгновенно через быстрые API-адаптеры в `@BeforeMethod`, а в браузере проверяются только нативные клики.
+* **Изоляция модальных окон (Form Scoping):** Поля ввода и кнопки подтверждения ищутся строго внутри активного CSS-контейнера формы (`form.NWLa0T #title`), что защищает Selenide от взаимодействия со старыми скрытыми React-элементами в DOM.
+* **Пуленепробиваемые локаторы:** Работа с выпадающими списками и иерархией папок React Aria Components переведена на оси XPath (`ancestor::button`) и поиск по константным атрибутам доступности (`button[contains(@aria-label, 'suite name actions')]`, `[data-key='create_suite']`), что полностью нивелирует падения из-за динамических ID и ховер-эффектов.
+* **Атомарная очистка данных (Single Responsibility Cleanup):** UI-тесты больше не удаляют за собой проекты через клики по интерфейсу. Полное каскадное удаление перенесено на API-адаптер в `@AfterMethod`, который всегда возвращает честный `HTTP 200` и защищает бесплатные лимиты аккаунта от забивания мусором.

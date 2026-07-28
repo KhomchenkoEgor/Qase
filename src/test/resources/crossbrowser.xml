@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Qase UI Crossbrowser Sequential Suite" verbose="1">
+<suite name="Qase UI Crossbrowser Sequential Suite" verbose="1" parallel="false">
 
     <listeners>
         <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
@@ -9,19 +9,19 @@
     </listeners>
 
     <test name="UI Tests - Google Chrome">
-        <parameter name="xmlBrowser" value="chrome"/>
+        <parameter name="browser" value="chrome"/>
         <groups><run><include name="regression"/></run></groups>
         <packages><package name="tests.ui"/></packages>
     </test>
 
     <test name="UI Tests - Mozilla Firefox">
-        <parameter name="xmlBrowser" value="firefox"/>
+        <parameter name="browser" value="firefox"/>
         <groups><run><include name="regression"/></run></groups>
         <packages><package name="tests.ui"/></packages>
     </test>
 
     <test name="UI Tests - Microsoft Edge">
-        <parameter name="xmlBrowser" value="edge"/>
+        <parameter name="browser" value="edge"/>
         <groups><run><include name="regression"/></run></groups>
         <packages><package name="tests.ui"/></packages>
     </test>

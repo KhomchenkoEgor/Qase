@@ -34,7 +34,6 @@ public class LoginTest extends BaseTest {
     public void checkLoginWithWrongPassword() {
         log.info("Тест UI: Проверка триггера глобальной ошибки безопасности");
         String wrongPassword = "Wrong_Password_" + QwenDataGenerator.generateText(5);
-
         loginPage.openPage()
                 .loginWithInvalidCredentials(user, wrongPassword)
                 .checkGlobalError("These credentials do not match our records.");

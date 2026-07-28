@@ -1,14 +1,10 @@
 package tests.api;
 
-import adapters.ProjectAdapter;
-import adapters.SuiteAdapter;
+import api.adapters.SuiteAdapter;
 import io.qameta.allure.*;
 import lombok.extern.log4j.Log4j2;
-import models.project.ProjectRq;
-import models.suite.SuiteRq;
-import models.suite.SuiteRs;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import api.models.suite.SuiteRq;
+import api.models.suite.SuiteRs;
 import org.testng.annotations.Test;
 import utils.QwenDataGenerator;
 
@@ -20,17 +16,7 @@ import static org.testng.Assert.assertTrue;
 @Feature("Тест-сьюты")
 @Story("Иерархические структуры и каскадное управление")
 @Owner("Khomchenko E.S.")
-public class SuiteApiTest {
-
-    private String projectCode;
-
-    @BeforeMethod(alwaysRun = true)
-    public void createProjectBeforeTest() {
-        log.info("API Предусловие: Быстрое развертывание проекта");
-        ProjectRq projectRq = QwenDataGenerator.generateProjectData();
-        projectCode = projectRq.getCode();
-        ProjectAdapter.createProject(projectRq);
-    }
+public class SuiteApiTest extends BaseApiTest{
 
     @Test(
             testName = "Иерархия и каскадное удаление сьютов",
@@ -57,11 +43,5 @@ public class SuiteApiTest {
                 "Имя сьюта в базе не совпадает со сгенерированным ИИ!");
         SuiteAdapter.deleteSuite(projectCode, parentId);
         log.info("Каскадное удаление родительского ID {} и вложенного ID {} завершено.", parentId, childId);
-    }
-
-    @AfterMethod(alwaysRun = true)
-    public void deleteProjectAfterTest() {
-        log.info("API Постусловие: Удаление проекта {}", projectCode);
-        ProjectAdapter.deleteProject(projectCode);
     }
 }

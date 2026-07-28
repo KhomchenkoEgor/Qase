@@ -1,12 +1,12 @@
 package tests.ui;
 
-import adapters.CaseAdapter;
-import adapters.ProjectAdapter;
+import api.adapters.CaseAdapter;
+import api.adapters.ProjectAdapter;
 import io.qameta.allure.*;
 import lombok.extern.log4j.Log4j2;
-import models.cases.CaseRq;
+import api.models.cases.CaseRq;
 
-import models.project.ProjectRq;
+import api.models.project.ProjectRq;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

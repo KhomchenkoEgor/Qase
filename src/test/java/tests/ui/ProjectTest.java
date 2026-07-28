@@ -2,7 +2,7 @@ package tests.ui;
 
 import io.qameta.allure.*;
 import lombok.extern.log4j.Log4j2;
-import models.project.ProjectRq;
+import api.models.project.ProjectRq;
 import org.testng.annotations.Test;
 import utils.QwenDataGenerator;
 
@@ -24,7 +24,7 @@ public class ProjectTest extends BaseTest {
         log.info("Тест UI: Старт сквозного сценария управления репозиторием");
         ProjectRq projectData = QwenDataGenerator.generateProjectData();
         String projectName = projectData.getTitle();
-        String projectCode = projectData.getCode();
+        projectCode = projectData.getCode();
         log.info("Для UI сессии выбраны ИИ-данные. Имя: [{}], Код: [{}]", projectName, projectCode);
         loginPage.openPage()
                 .login(user, password)

@@ -54,4 +54,3 @@ public class PropertyReader {
         return loadProperties().getProperty(propertyName);
     }
 }
-

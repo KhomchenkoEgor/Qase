@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Qase Ultimate Full Automation Suite" verbose="1">
+<suite name="Qase Ultimate Full Automation Suite" verbose="1" parallel="false">
 
     <listeners>
         <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
@@ -13,8 +13,23 @@
             <package name="tests.api"/>
         </packages>
     </test>
-    <test name="Phase 2 - Pure UI Tests Run">
+
+    <test name="Phase 2 - UI Tests Chrome">
         <parameter name="browser" value="chrome"/>
+        <packages>
+            <package name="tests.ui"/>
+        </packages>
+    </test>
+
+    <test name="Phase 3 - UI Tests Firefox">
+        <parameter name="browser" value="firefox"/>
+        <packages>
+            <package name="tests.ui"/>
+        </packages>
+    </test>
+
+    <test name="Phase 4 - UI Tests Edge">
+        <parameter name="browser" value="edge"/>
         <packages>
             <package name="tests.ui"/>
         </packages>

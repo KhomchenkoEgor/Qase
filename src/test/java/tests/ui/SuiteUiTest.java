@@ -2,8 +2,8 @@ package tests.ui;
 
 import io.qameta.allure.*;
 import lombok.extern.log4j.Log4j2;
-import models.project.ProjectRq;
-import models.suite.SuiteRq;
+import api.models.project.ProjectRq;
+import api.models.suite.SuiteRq;
 import org.testng.annotations.Test;
 import utils.QwenDataGenerator;
 

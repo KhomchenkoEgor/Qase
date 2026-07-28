@@ -47,8 +47,11 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Run tests
-        run: mvn clean test -Dtoken=$QASE_TOKEN -Duser=$USER_EMAIL -Dpassword=$USER_PASSWORD
-        continue-on-error: true
+        run: |
+          mvn clean test \
+          -Dtoken=$QASE_TOKEN \
+          -Duser=$USER_EMAIL \
+          -Dpassword=$USER_PASSWORD
 
       - name: Get Allure history
         uses: actions/checkout@v4
