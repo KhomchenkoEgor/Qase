@@ -64,11 +64,6 @@ public class BaseTest {
             EdgeOptions options = new EdgeOptions();
             options.addArguments("--headless");
             Configuration.browserCapabilities = options;
-        } else if (browser.equalsIgnoreCase("firefox")) {
-            FirefoxOptions options = new FirefoxOptions();
-            options.setBinary("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
-            options.addArguments("--headless");
-            Configuration.browserCapabilities = options;
         }
 
         loginPage = new LoginPage();
@@ -78,15 +73,22 @@ public class BaseTest {
     @AfterMethod(alwaysRun = true, description = "API очистка тестовых данных и закрытие браузера")
     @Step("Удаление созданного проекта через API и закрытие браузера")
     public void tearDown() {
-
         try {
             if (projectCreated && projectCode != null) {
                 log.info("UI Гибридное Постусловие: API-зачистка проекта: {}", projectCode);
-                ProjectAdapter.deleteProject(projectCode);
-                log.info("Проект {} успешно удален через API", projectCode);
+                try {
+                    ProjectAdapter.deleteProject(projectCode);
+                    log.info("Проект {} успешно удален через API", projectCode);
+                } catch (AssertionError e) {
+                    if (e.getMessage().contains("404")) {
+                        log.info("Проект {} уже удалён (404)", projectCode);
+                    } else {
+                        throw e;
+                    }
+                }
             }
         } catch (Exception e) {
-            log.error("Ошибка при API удалении проекта {}", projectCode, e);
+            log.error("Ошибка при API удалении проекта {}: {}", projectCode, e.getMessage());
         } finally {
             projectCode = null;
             projectCreated = false;

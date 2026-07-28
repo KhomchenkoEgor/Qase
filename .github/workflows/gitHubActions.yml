@@ -36,22 +36,26 @@ jobs:
       QASE_TOKEN: ${{ secrets.QASE_API_TOKEN }}
       USER_EMAIL: ${{ secrets.QASE_USER_EMAIL }}
       USER_PASSWORD: ${{ secrets.QASE_USER_PASSWORD }}
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+
       - name: Run tests
         run: |
           mvn clean test \
           -Dtoken=$QASE_TOKEN \
           -Duser=$USER_EMAIL \
-          -Dpassword=$USER_PASSWORD
+          -Dpassword=$USER_PASSWORD \
+          -Dmistral_api_key=$MISTRAL_API_KEY
 
       - name: Get Allure history
         uses: actions/checkout@v4

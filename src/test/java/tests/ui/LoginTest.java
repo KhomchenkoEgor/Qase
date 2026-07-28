@@ -47,9 +47,9 @@ public class LoginTest extends BaseTest {
     @TmsLink("QASE-UI-03")
     public void checkLoginWithInvalidEmailFormat() {
         log.info("Тест UI: Проверка фронтенд-валидации формата строки email");
-        String randomEmail = QwenDataGenerator.generateEmail();
+        String randomInvalidEmail = QwenDataGenerator.generateInvalidEmail();
         loginPage.openPage()
-                .loginWithInvalidCredentials(randomEmail, password)
+                .loginWithInvalidCredentials(randomInvalidEmail, password)
                 .checkFieldError("does not match format email");
     }
 }

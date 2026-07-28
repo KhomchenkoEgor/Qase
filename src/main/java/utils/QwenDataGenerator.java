@@ -8,6 +8,8 @@ import api.models.cases.CaseRq;
 import api.models.plan.PlanRq;
 import api.models.project.ProjectRq;
 import api.models.suite.SuiteRq;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -16,14 +18,17 @@ import static io.restassured.RestAssured.given;
 
 public class QwenDataGenerator {
 
-    private static final String OLLAMA_URL = "http://localhost:11434";
-    private static final String MODEL_NAME = "qwen2.5-coder:7b";
+    private static final Logger logger = LoggerFactory.getLogger(QwenDataGenerator.class);
+    private static final String MISTRAL_API_URL = "https://api.mistral.ai/v1";
+    private static final String MODEL_NAME = "mistral-medium-latest";
+    private static final String API_KEY = System.getProperty("mistral_api_key", PropertyReader.getProperty("mistral_api_key"));
     private static final Gson GSON = new Gson();
 
-    private static final RequestSpecification ollamaSpec = new RequestSpecBuilder()
-            .setBaseUri(OLLAMA_URL)
-            .setBasePath("/api/chat")
+    private static final RequestSpecification mistralSpec = new RequestSpecBuilder()
+            .setBaseUri(MISTRAL_API_URL)
+            .setBasePath("/chat/completions")
             .setContentType(ContentType.JSON)
+            .addHeader("Authorization", "Bearer " + API_KEY)
             .build();
 
     private static String generateJsonViaLlm(String userPrompt) {
@@ -31,20 +36,35 @@ public class QwenDataGenerator {
                 "Output ONLY a valid raw JSON object matching the requested schema. " +
                 "Do not include any explanations, markdown code blocks (```json), or comments.";
 
+        if (API_KEY == null || API_KEY.isEmpty()) {
+            logger.error("MISTRAL_API_KEY не установлен в переменных окружения!");
+            return getFallbackJson(userPrompt);
+        }
         Map<String, Object> requestBody = Map.of(
                 "model", MODEL_NAME,
                 "messages", List.of(
                         Map.of("role", "system", "content", systemPrompt),
                         Map.of("role", "user", "content", userPrompt)
                 ),
-                "stream", false,
-                "options", Map.of("temperature", 0.6),
-                "format", "json"
+                "temperature", 0.6
         );
 
         try {
+            logger.debug("Отправляемый запрос в Mistral API: {}", GSON.toJson(requestBody));
+            String response = given()
+                    .spec(mistralSpec)
+                    .body(GSON.toJson(requestBody))
+                    .when()
+                    .post()
+                    .then()
+                    .statusCode(200)
+                    .extract()
+                    .asString();
+
+            logger.debug("Ответ от Mistral API: {}", response);
+
             return given()
-                    .spec(ollamaSpec)
+                    .spec(mistralSpec)
                     .body(GSON.toJson(requestBody))
                     .when()
                     .post()
@@ -52,9 +72,9 @@ public class QwenDataGenerator {
                     .statusCode(200)
                     .extract()
                     .jsonPath()
-                    .getString("message.content");
+                    .getString("choices[0].message.content");
         } catch (Exception e) {
-            System.err.println("Ошибка вызова Ollama. Применяется локальный резервный хардкод: " + e.getMessage());
+            logger.error("Ошибка вызова Mistral API. Применяется локальный резервный хардкод: {}", e.getMessage());
             return getFallbackJson(userPrompt);
         }
     }
@@ -102,19 +122,21 @@ public class QwenDataGenerator {
 
     public static CaseRq generateTestCaseData() {
         String prompt = """
-                Generate a JSON for a high-quality QA test case.
-                Schema criteria:
-                - title: Meaningful test case title in Russian language.
-                - description: Detailed test scenario objective in Russian.
-                - preconditions: Set of initial test conditions in Russian.
-                - postconditions: Cleanup or expected global state in Russian.
-                - severity: integer (1 for Blocker, 2 for Critical, 3 for Major).
-                - priority: integer (1 for High, 2 for Medium, 3 for Low).
-                - status: integer (strictly 1).
-                - steps: Array of 2 realistic test steps. Each step must contain fields:
-                  * action: user interaction text in Russian.
-                  * expected_result: verification outcome text in Russian.
-                """;
+            Generate a JSON for a high-quality QA test case.
+            **CRITICAL**: preconditions and postconditions MUST be **single strings**, NOT arrays!
+            Use semicolons (;) to separate multiple conditions.
+            Schema criteria:
+            - title: Meaningful test case title in Russian language.
+            - description: Detailed test scenario objective in Russian.
+            - preconditions: **Single string** with initial test conditions in Russian, separated by semicolons.
+            - postconditions: **Single string** with cleanup or expected global state in Russian, separated by semicolons.
+            - severity: integer (1 for Blocker, 2 for Critical, 3 for Major).
+            - priority: integer (1 for High, 2 for Medium, 3 for Low).
+            - status: integer (strictly 1).
+            - steps: Array of 2 realistic test steps. Each step must contain fields:
+              * action: user interaction text in Russian.
+              * expected_result: verification outcome text in Russian.
+            """;
         return GSON.fromJson(generateJsonViaLlm(prompt), CaseRq.class);
     }
 
@@ -169,16 +191,17 @@ public class QwenDataGenerator {
         }
     }
 
-    public static String generateEmail() {
-        String prompt = "Generate a single realistic fake corporate email address for QA testing " +
-                "(e.g., 'test_user_99@company.local', 'hacker_attempt@secure.net'). " +
+    public static String generateInvalidEmail() {
+        String prompt = "Generate a single INVALID email address for testing purposes. " +
+                "The email MUST NOT contain '@' symbol or have a valid domain format. " +
+                "Examples: 'invalid-email', 'test@', '@domain.com', 'plainstring'. " +
                 "Output ONLY a raw text string, no markdown, no quotes, no formatting.";
 
         try {
             String response = generateJsonViaLlm(prompt);
             return response.replaceAll("\"", "").replaceAll("\\{", "").replaceAll("\\}", "").trim();
         } catch (Exception e) {
-            return "qa_fallback_" + (int)(Math.random() * 10000) + "@qwen-coder.local";
+            return "invalid-email-" + (int)(Math.random() * 10000);
         }
     }
 

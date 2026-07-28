@@ -26,6 +26,7 @@ public class SuiteUiTest extends BaseTest {
         ProjectRq projectData = QwenDataGenerator.generateProjectData();
         SuiteRq parentSuiteData = QwenDataGenerator.generateSuiteData();
         SuiteRq childSuiteData = QwenDataGenerator.generateSuiteData();
+        projectCode = projectData.getCode();
 
         loginPage.openPage()
                 .login(user, password)

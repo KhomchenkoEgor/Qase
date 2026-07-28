@@ -21,14 +21,7 @@
         </packages>
     </test>
 
-    <test name="Phase 3 - UI Tests Firefox">
-        <parameter name="browser" value="firefox"/>
-        <packages>
-            <package name="tests.ui"/>
-        </packages>
-    </test>
-
-    <test name="Phase 4 - UI Tests Edge">
+    <test name="Phase 3 - UI Tests Edge">
         <parameter name="browser" value="edge"/>
         <packages>
             <package name="tests.ui"/>

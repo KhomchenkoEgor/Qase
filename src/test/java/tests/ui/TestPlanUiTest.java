@@ -7,7 +7,6 @@ import lombok.extern.log4j.Log4j2;
 import api.models.cases.CaseRq;
 
 import api.models.project.ProjectRq;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import utils.QwenDataGenerator;
@@ -19,7 +18,6 @@ import utils.QwenDataGenerator;
 @Owner("Khomchenko E.S.")
 public class TestPlanUiTest extends BaseTest {
 
-    private String projectCode;
     private String projectName;
 
     @BeforeMethod(alwaysRun = true)
@@ -29,7 +27,7 @@ public class TestPlanUiTest extends BaseTest {
         projectCode = projectRq.getCode();
         projectName = projectRq.getTitle();
         ProjectAdapter.createProject(projectRq);
-
+        projectCreated = true;
         CaseRq caseRq = QwenDataGenerator.generateTestCaseData();
         CaseAdapter.createCase(caseRq, projectCode);
     }
@@ -54,11 +52,5 @@ public class TestPlanUiTest extends BaseTest {
                 .createTestPlan(planTitle)
                 .checkPlanVisible(planTitle)
                 .returnToProjects();
-    }
-
-    @AfterMethod(alwaysRun = true)
-    public void cleanupApi() {
-        log.info("UI Гибридное Постусловие: Быстрая API-зачистка созданного репозитория: {}", projectCode);
-        ProjectAdapter.deleteProject(projectCode);
     }
 }

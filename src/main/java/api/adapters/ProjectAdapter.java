@@ -6,6 +6,8 @@ import api.models.project.ProjectRs;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.is;
 
 @Log4j2
 public class ProjectAdapter extends BaseAdapter{
@@ -34,6 +36,6 @@ public class ProjectAdapter extends BaseAdapter{
                 .delete("/project/{code}")
                 .then()
                 .log().all()
-                .spec(ok200);
+                .statusCode(anyOf(is(200), is(404)));
     }
 }

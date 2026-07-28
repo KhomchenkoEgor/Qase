@@ -5,6 +5,8 @@ import com.codeborne.selenide.ex.ElementNotFound;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
@@ -19,7 +21,7 @@ public class ProjectPage {
         log.info("Ожидаем загрузку визуальных компонентов репозитория Qase...");
         Configuration.clickViaJs = false;
         $x(REPOSITORY_COMPONENT)
-                .shouldBe(visible, java.time.Duration.ofSeconds(30));
+                .shouldBe(visible, Duration.ofSeconds(30));
         log.info("Компоненты репозитория успешно обнаружены.");
         Configuration.clickViaJs = true;
         return this;
@@ -49,13 +51,13 @@ public class ProjectPage {
         log.info("Начинаем процесс создания тест-сьюта: " + suiteName);
         try {
             $x(EMPTY_REPOSITORY_CREATE_SUITE_BUTTON)
-                    .shouldBe(visible, java.time.Duration.ofSeconds(5))
+                    .shouldBe(visible, Duration.ofSeconds(5))
                     .click();
             log.info("Кликнули по центральной кнопке 'Create new suite'.");
         } catch (ElementNotFound e) {
             log.info("Центральная кнопка не найдена. Пытаемся кликнуть по верхней панели инструментов...");
             $x(TOOLBAR_CREATE_SUITE_BUTTON)
-                    .shouldBe(visible, java.time.Duration.ofSeconds(5))
+                    .shouldBe(visible, Duration.ofSeconds(5))
                     .click();
         }
         $(SUITE_TITLE_INPUT).shouldBe(visible).setValue(suiteName);
@@ -78,11 +80,11 @@ public class ProjectPage {
         String targetButtonXpath = String.format(SUITE_ACTION_BUTTON_TEMPLATE, parentName);
         Configuration.clickViaJs = false;
         $x(targetButtonXpath)
-                .shouldBe(visible, java.time.Duration.ofSeconds(10))
+                .shouldBe(visible, Duration.ofSeconds(10))
                 .click();
         sleep(500);
         $(CREATE_SUITE_MENU_ITEM)
-                .shouldBe(visible, java.time.Duration.ofSeconds(5))
+                .shouldBe(visible, Duration.ofSeconds(5))
                 .click();
         $(ACTIVE_SUITE_INPUT).shouldBe(visible).setValue(childName);
         $(ACTIVE_CONFIRM_BUTTON).shouldBe(enabled).click();
@@ -96,14 +98,14 @@ public class ProjectPage {
         String targetButtonXpath = String.format(SUITE_ACTION_BUTTON_TEMPLATE, suiteName);
         Configuration.clickViaJs = false;
         $x(targetButtonXpath)
-                .shouldBe(visible, java.time.Duration.ofSeconds(10))
+                .shouldBe(visible, Duration.ofSeconds(10))
                 .click();
         sleep(500);
         $(CLONE_MENU_ITEM)
-                .shouldBe(visible, java.time.Duration.ofSeconds(5))
+                .shouldBe(visible, Duration.ofSeconds(5))
                 .click();
         $x(CLONE_CONFIRM_BUTTON)
-                .shouldBe(visible, java.time.Duration.ofSeconds(5))
+                .shouldBe(visible, Duration.ofSeconds(5))
                 .click();
         log.info("Запрос на клонирование выполнен.");
         return this;
@@ -120,7 +122,7 @@ public class ProjectPage {
         log.info("Кликаем по пункту 'Test Plans' в боковой панели навигации Qase...");
         Configuration.clickViaJs = true;
         $x(TEST_PLANS_LINK)
-                .shouldBe(visible, java.time.Duration.ofSeconds(10))
+                .shouldBe(visible, Duration.ofSeconds(10))
                 .click();
         Configuration.clickViaJs = false;
         return new TestPlanPage();

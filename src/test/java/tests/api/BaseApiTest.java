@@ -30,7 +30,8 @@ public abstract class BaseApiTest {
     @AfterMethod(alwaysRun = true)
     public void deleteProjectAfterTest() {
         if (projectCode != null) {
-            log.info("API Постусловие: Удаление проекта {}", projectCode);
+            log.info("API Постусловие: Удаление проекта {}",projectCode
+            );
             ProjectAdapter.deleteProject(projectCode);
             projectCode = null;
         }
