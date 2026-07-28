@@ -1,0 +1,1 @@
+{"total":2,"items":[{"uid":"83fc3652d6cc7685d800d998629782ff","name":"Qase UI Application","statistic":{"failed":2,"broken":2,"skipped":0,"passed":0,"unknown":0,"total":4}},{"uid":"89c03008d22be9de9c53898ee6ffaf75","name":"Qase API Engine","statistic":{"failed":0,"broken":0,"skipped":0,"passed":4,"unknown":0,"total":4}}]}
