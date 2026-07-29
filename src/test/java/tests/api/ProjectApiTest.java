@@ -7,7 +7,7 @@ import api.models.project.ProjectRq;
 import api.models.project.ProjectRs;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
-import utils.QwenDataGenerator;
+import utils.AiDataGenerator;
 
 import static api.adapters.ProjectAdapter.createProject;
 import static org.testng.Assert.assertEquals;
@@ -31,7 +31,7 @@ public class ProjectApiTest {
     @TmsLink("QASE-API-01")
     public void checkCreateProject() {
         log.info("Тест: Запуск сценария генерации и создания проекта через API");
-        ProjectRq rq = QwenDataGenerator.generateProjectData();
+        ProjectRq rq = AiDataGenerator.generateProjectData();
         projectCode.set(rq.getCode());
         log.info("ИИ сгенерировал уникальный код проекта для этой сессии: {}", projectCode.get());
         ProjectRs rs = createProject(rq);

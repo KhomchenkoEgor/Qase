@@ -9,7 +9,7 @@ import api.models.plan.PlanRq;
 import api.models.plan.PlanRs;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import utils.QwenDataGenerator;
+import utils.AiDataGenerator;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class TestPlanApiTest extends BaseApiTest {
     @BeforeMethod(alwaysRun = true)
     public void prepareCase() {
         log.info("API Предусловие: Создание базового кейса");
-        CaseRq caseRq = QwenDataGenerator.generateTestCaseData();
+        CaseRq caseRq = AiDataGenerator.generateTestCaseData();
         var caseRs = CaseAdapter.createCase(caseRq,projectCode);
         caseId = caseRs.getResult().getId();
     }
@@ -42,7 +42,7 @@ public class TestPlanApiTest extends BaseApiTest {
     @TmsLink("QASE-API-04")
     public void checkTestPlanCrudLifecycle() {
         log.info("Тест: Создание релизного тест-плана для проекта: {}", projectCode);
-        PlanRq planRq = QwenDataGenerator.generatePlanData(List.of(caseId));
+        PlanRq planRq = AiDataGenerator.generatePlanData(List.of(caseId));
         PlanRs planRs = PlanAdapter.createPlan(planRq, projectCode);
         assertTrue(planRs.getStatus(), "Не удалось создать тест-план через API!");
         int planId = planRs.getResult().getId();

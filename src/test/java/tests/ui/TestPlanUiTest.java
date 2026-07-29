@@ -9,7 +9,7 @@ import api.models.cases.CaseRq;
 import api.models.project.ProjectRq;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import utils.QwenDataGenerator;
+import utils.AiDataGenerator;
 
 @Log4j2
 @Epic("Qase UI Application")
@@ -23,12 +23,12 @@ public class TestPlanUiTest extends BaseTest {
     @BeforeMethod(alwaysRun = true)
     public void prepareDataViaApi() {
         log.info("UI Гибридное Предусловие: Скоростной накат данных через API адаптеры");
-        ProjectRq projectRq = QwenDataGenerator.generateProjectData();
+        ProjectRq projectRq = AiDataGenerator.generateProjectData();
         projectCode = projectRq.getCode();
         projectName = projectRq.getTitle();
         ProjectAdapter.createProject(projectRq);
         projectCreated = true;
-        CaseRq caseRq = QwenDataGenerator.generateTestCaseData();
+        CaseRq caseRq = AiDataGenerator.generateTestCaseData();
         CaseAdapter.createCase(caseRq, projectCode);
     }
 
@@ -41,7 +41,7 @@ public class TestPlanUiTest extends BaseTest {
     @TmsLink("QASE-UI-06")
     public void checkCreateTestPlanViaUi() {
         log.info("Тест UI: Открытие репозитория [{}] и переход в конструктор планов", projectName);
-        String planTitle = QwenDataGenerator.generatePlanTitleViaLlm();
+        String planTitle = AiDataGenerator.generatePlanTitleViaLlm();
 
         loginPage.openPage()
                 .login(user, password)

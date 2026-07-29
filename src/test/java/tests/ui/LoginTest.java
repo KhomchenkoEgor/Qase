@@ -3,7 +3,7 @@ package tests.ui;
 import io.qameta.allure.*;
 import lombok.extern.log4j.Log4j2;
 import org.testng.annotations.Test;
-import utils.QwenDataGenerator;
+import utils.AiDataGenerator;
 
 @Log4j2
 @Epic("Qase UI Application")
@@ -33,7 +33,7 @@ public class LoginTest extends BaseTest {
     @TmsLink("QASE-UI-02")
     public void checkLoginWithWrongPassword() {
         log.info("Тест UI: Проверка триггера глобальной ошибки безопасности");
-        String wrongPassword = "Wrong_Password_" + QwenDataGenerator.generateText(5);
+        String wrongPassword = "Wrong_Password_" + AiDataGenerator.generateText(5);
         loginPage.openPage()
                 .loginWithInvalidCredentials(user, wrongPassword)
                 .checkGlobalError("These credentials do not match our records.");
@@ -47,7 +47,7 @@ public class LoginTest extends BaseTest {
     @TmsLink("QASE-UI-03")
     public void checkLoginWithInvalidEmailFormat() {
         log.info("Тест UI: Проверка фронтенд-валидации формата строки email");
-        String randomInvalidEmail = QwenDataGenerator.generateInvalidEmail();
+        String randomInvalidEmail = AiDataGenerator.generateInvalidEmail();
         loginPage.openPage()
                 .loginWithInvalidCredentials(randomInvalidEmail, password)
                 .checkFieldError("does not match format email");

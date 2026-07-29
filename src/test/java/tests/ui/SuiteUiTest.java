@@ -5,7 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import api.models.project.ProjectRq;
 import api.models.suite.SuiteRq;
 import org.testng.annotations.Test;
-import utils.QwenDataGenerator;
+import utils.AiDataGenerator;
 
 @Log4j2
 @Epic("Qase UI Application")
@@ -23,9 +23,9 @@ public class SuiteUiTest extends BaseTest {
     @TmsLink("QASE-UI-05")
     public void checkNestedSuiteAndCloningLifecycle() {
         log.info("Тест UI: Управление вложенными структурами папок в браузере");
-        ProjectRq projectData = QwenDataGenerator.generateProjectData();
-        SuiteRq parentSuiteData = QwenDataGenerator.generateSuiteData();
-        SuiteRq childSuiteData = QwenDataGenerator.generateSuiteData();
+        ProjectRq projectData = AiDataGenerator.generateProjectData();
+        SuiteRq parentSuiteData = AiDataGenerator.generateSuiteData();
+        SuiteRq childSuiteData = AiDataGenerator.generateSuiteData();
         projectCode = projectData.getCode();
 
         loginPage.openPage()

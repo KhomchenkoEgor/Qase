@@ -4,7 +4,7 @@ import io.qameta.allure.*;
 import lombok.extern.log4j.Log4j2;
 import api.models.project.ProjectRq;
 import org.testng.annotations.Test;
-import utils.QwenDataGenerator;
+import utils.AiDataGenerator;
 
 @Log4j2
 @Epic("Qase UI Application")
@@ -22,7 +22,7 @@ public class ProjectTest extends BaseTest {
     @TmsLink("QASE-UI-04")
     public void checkCreateProject() {
         log.info("Тест UI: Старт сквозного сценария управления репозиторием");
-        ProjectRq projectData = QwenDataGenerator.generateProjectData();
+        ProjectRq projectData = AiDataGenerator.generateProjectData();
         String projectName = projectData.getTitle();
         projectCode = projectData.getCode();
         log.info("Для UI сессии выбраны ИИ-данные. Имя: [{}], Код: [{}]", projectName, projectCode);

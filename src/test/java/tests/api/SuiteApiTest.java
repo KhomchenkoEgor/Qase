@@ -6,7 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import api.models.suite.SuiteRq;
 import api.models.suite.SuiteRs;
 import org.testng.annotations.Test;
-import utils.QwenDataGenerator;
+import utils.AiDataGenerator;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -27,8 +27,8 @@ public class SuiteApiTest extends BaseApiTest{
     @TmsLink("QASE-API-03")
     public void checkSuiteCrudLifecycle() {
         log.info("Тест: Сборка дерева тест-сьютов в репозитории: {}", projectCode);
-        SuiteRq parentRq = QwenDataGenerator.generateSuiteData();
-        SuiteRq childRq = QwenDataGenerator.generateSuiteData();
+        SuiteRq parentRq = AiDataGenerator.generateSuiteData();
+        SuiteRq childRq = AiDataGenerator.generateSuiteData();
         SuiteRs parentRs = SuiteAdapter.createSuite(parentRq, projectCode);
         assertTrue(parentRs.getStatus(), "Не удалось создать родительский сьют через API!");
         int parentId = parentRs.getResult().getId();

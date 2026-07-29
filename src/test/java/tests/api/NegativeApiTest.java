@@ -46,11 +46,9 @@ public class NegativeApiTest extends BaseApiTest{
                 .build();
 
         Response response = ProjectAdapter.createProjectRaw(rq, specWithToken("invalid_token_value"));
-
         response.prettyPrint();
         response.then().spec(unauthorized401);
         AuthErrorRs error = response.as(AuthErrorRs.class);
-
         assertNotNull(error.getError(),
                 "Ответ 401 должен содержать описание ошибки!");
 
@@ -78,7 +76,6 @@ public class NegativeApiTest extends BaseApiTest{
                 .build();
 
         Response response = ProjectAdapter.createProjectRaw(invalidRq, spec);
-
         response.then().spec(expectStatus(VALIDATION_ERROR_CODE));
         ErrorRs error = response.as(ErrorRs.class);
         assertEquals(error.getStatus(), Boolean.FALSE,
@@ -100,9 +97,7 @@ public class NegativeApiTest extends BaseApiTest{
     @TmsLink("QASE-API-07")
     public void checkGetNonExistentProjectReturnsNotFound() {
         log.info("Тест: запрос проекта с несуществующим кодом {}", NON_EXISTENT_PROJECT_CODE);
-
         Response response = ProjectAdapter.getProjectRaw(NON_EXISTENT_PROJECT_CODE);
-
         response.then().spec(notFound404);
         ErrorRs error = response.as(ErrorRs.class);
         assertEquals(error.getStatus(), Boolean.FALSE,

@@ -5,7 +5,7 @@ import api.models.project.ProjectRq;
 import lombok.extern.log4j.Log4j2;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import utils.QwenDataGenerator;
+import utils.AiDataGenerator;
 
 import static org.testng.Assert.assertTrue;
 
@@ -17,7 +17,7 @@ public abstract class BaseApiTest {
     @BeforeMethod(alwaysRun = true)
     public void createProjectBeforeTest() {
         log.info("API Предусловие: Создание изолированного проекта");
-        ProjectRq projectRq = QwenDataGenerator.generateProjectData();
+        ProjectRq projectRq = AiDataGenerator.generateProjectData();
         projectCode = projectRq.getCode();
         var response = ProjectAdapter.createProject(projectRq);
         assertTrue(

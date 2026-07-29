@@ -8,15 +8,14 @@ import api.models.cases.CaseRq;
 import api.models.plan.PlanRq;
 import api.models.project.ProjectRq;
 import api.models.suite.SuiteRq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
-public class QwenDataGenerator {
+public class AiDataGenerator {
 
     private static final String MISTRAL_API_URL = "https://api.mistral.ai/v1";
     private static final String MODEL_NAME = "mistral-medium-latest";
