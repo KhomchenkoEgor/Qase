@@ -17,7 +17,7 @@
         <allure.maven.version>2.12.0</allure.maven.version>
         <surefire.version>3.5.5</surefire.version>
         <suiteXmlFile>src/test/resources/tests.xml</suiteXmlFile>
-        <allure.version>2.24.0</allure.version>
+        <allure.version>2.35.3</allure.version>
         <aspectj.version>1.9.20.1</aspectj.version>
         <log4j.version>2.26.0</log4j.version>
         <lombok.version>1.18.46</lombok.version>
@@ -88,12 +88,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.46</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
@@ -154,9 +148,9 @@
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
                     <systemPropertyVariables>
-                        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
-                        <selenide.screenshots>false</selenide.screenshots>
+                        <selenide.screenshots>true</selenide.screenshots>
                         <selenide.savePageSource>false</selenide.savePageSource>
+                        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
                         <selenide.browser>chrome</selenide.browser>
                         <selenide.headless>true</selenide.headless>
                     </systemPropertyVariables>
