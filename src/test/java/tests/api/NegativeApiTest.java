@@ -23,7 +23,7 @@ import static org.testng.Assert.assertNotNull;
 @Feature("Негативные проверки")
 @Story("Обработка ошибок: авторизация, валидация тела, отсутствующий ресурс")
 @Owner("Khomchenko E.S.")
-public class NegativeApiTest {
+public class NegativeApiTest extends BaseApiTest{
 
     private static final int VALIDATION_ERROR_CODE = 400;
     private static final String NON_EXISTENT_PROJECT_CODE = "ZZZZZQ";

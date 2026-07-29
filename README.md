@@ -68,51 +68,38 @@
 ### 📂 Структура проекта
 
 ```text
-src
-└── test
-    ├── java
-    │   ├── adapters           # Слой API-адаптеров (RestAssured обертки для сущностей Qase)
-    │   │   ├── BaseAdapter.java
-    │   │   ├── CaseAdapter.java
-    │   │   ├── PlanAdapter.java
-    │   │   ├── ProjectAdapter.java
-    │   │   └── SuiteAdapter.java
-    │   ├── dict               # Словари, константы и статические тексты приложения
-    │   │   └── Elements.java
-    │   ├── listeners          # Слушатели TestNG (логирование, скриншоты Allure на failure)
-    │   │   ├── RetryListener.java
-    │   │   └── TestListener.java
-    │   ├── models             # DTO / POJO модели для сериализации/десериализации Jackson/Gson
-    │   │   ├── cases          # Модели запросов и ответов для Тест-кейсов (CaseRq, CaseRs, Step)
-    │   │   ├── plan           # Модели для Тест-планов
-    │   │   ├── project        # Модели для Проектов
-    │   │   └── suite          # Модели для Тест-сьютов
-    │   ├── pages              # Слой UI-страниц (Паттерн Page Object Model на Selenide)
-    │   │   ├── LoginPage.java
-    │   │   ├── ProjectPage.java
-    │   │   ├── ProjectsPage.java
-    │   │   └── TestPlanPage.java
-    │   ├── tests              # Слой тест-сценариев
-    │   │   ├── api            # Изолированные API-тесты (компонентные и CRUD)
-    │   │   │   ├── BaseApiTest.java
-    │   │   │   ├── CaseApiTest.java
-    │   │   │   ├── ProjectApiTest.java
-    │   │   │   └── SuiteApiTest.java
-    │   │   └── ui             # UI-тесты (включая гибридные E2E сценарии)
-    │   │       ├── BaseTest.java
-    │   │       ├── LoginTest.java
-    │   │       ├── ProjectTest.java
-    │   │       ├── SuiteUiTest.java
-    │   │       └── TestPlanUiTest.java
-    │   └── utils              # Утилитарные классы (чтение конфигов, AI-генератор, перезапуски)
-    │       ├── AllureUtils.java
+.
+├── .github/workflows/gitHubActions.yml
+├── pom.xml
+└── src
+    ├── main/java
+    │   ├── api
+    │   │   ├── adapters      # RestAssured-обёртки над сущностями Qase
+    │   │   └── models        # DTO (Rq/Rs) для cases, plan, project, suite
+    │   ├── ui
+    │   │   ├── dict          # Константы текстов интерфейса
+    │   │   ├── locators      # Локаторы, сгруппированные по страницам
+    │   │   └── pages         # Page Object Model на Selenide
+    │   └── utils
     │       ├── PropertyReader.java
-    │       ├── QwenDataGenerator.java  # Модуль интеграции с Ollama API (Qwen LLM)
-    │       └── Retry.java
-    └── resources
-        ├── schemas            # JSON-схемы для валидации контрактов API (.json)
-        ├── config.properties  # Файл конфигурации (в репозитории хранится шаблон template)
-        └── testng.xml         # Файл конфигурации последовательного запуска тестов TestNG
+    │       └── QwenDataGenerator.java
+    └── test
+        ├── java
+        │   ├── listeners     # TestListener, RetryListener
+        │   ├── tests/api     # BaseApiTest + 4 API-теста
+        │   ├── tests/ui      # BaseTest + 4 UI-теста
+        │   └── utils         # AllureUtils, Retry
+        └── resources
+            ├── schemas/create_project_schema.json
+            ├── allure.properties
+            ├── config.properties.example
+            ├── log4j2-test.xml
+            ├── tests.xml            # полный прогон (дефолт surefire)
+            ├── api-smoke.xml
+            ├── api-regression.xml
+            ├── ui-smoke.xml
+            ├── ui-regression.xml
+            └── crossbrowser.xml     # последовательный прогон в 3 браузерах
 ```
 ---
 
@@ -140,68 +127,80 @@ src
 Создайте файл по указанному пути в корне проекта. Сценарий автоматически поднимет Docker-контейнер Ollama на стороне GitHub-раннера, скачает модель Qwen, запустит тесты в режиме Chrome Headless и опубликует Allure-отчет на GitHub Pages.
 
 ```yaml
-name: Qase.io AI Regression CI
+name: Qase Framework CI & Allure Report
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "master", "main" ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ "master", "main" ]
+  workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Выберите тест-сьют для запуска:'
+        required: true
+        default: 'tests'
+        type: choice
+        options:
+          - 'api-smoke'
+          - 'ui-smoke'
+          - 'api-regression'
+          - 'ui-regression'
+          - 'tests'
 
 jobs:
-  build:
+  run-tests:
+    name: Execute Tests & Publish Report
     runs-on: ubuntu-latest
 
-    services:
-      # Поднимаем локальную Ollama в Docker-контейнере прямо на раннере GitHub
-      ollama:
-        image: ollama/ollama:latest
-        ports:
-          - 11434:11434
+    env:
+      QASE_TOKEN: ${{ secrets.QASE_API_TOKEN }}
+      USER_EMAIL: ${{ secrets.QASE_USER_EMAIL }}
+      USER_PASSWORD: ${{ secrets.QASE_USER_PASSWORD }}
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
 
-    - name: Pull Qwen Model inside Container
-      run: |
-        curl http://localhost:11434/api/pull -d '{"name": "qwen2.5-coder:7b"}'
+      - name: Run tests
+        run: |
+          mvn clean test \
+          -Dtoken=$QASE_TOKEN \
+          -Duser=$USER_EMAIL \
+          -Dpassword=$USER_PASSWORD \
+          -Dmistral_api_key=$MISTRAL_API_KEY
 
-    - name: Run Regression Tests (Headless)
-      run: mvn clean test -Dselenide.headless=true
-      env:
-        # Передаем секреты из настроек репозитория GitHub
-        QASE_TOKEN: ${{ secrets.QASE_TOKEN }}
-        QASE_USER: ${{ secrets.QASE_USER }}
-        QASE_PASSWORD: ${{ secrets.QASE_PASSWORD }}
+      - name: Get Allure history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
 
-    - name: Get Allure History
-      final: always()
-      uses: actions/checkout@v4
-      if: always()
-      with:
-        ref: gh-pages
-        path: gh-pages
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          allure_results: target/allure-results
+          allure_history: allure-history
+          keep_reports: 20
 
-    - name: Generate Allure Report
-      uses: simple-elf/allure-report-action@master
-      if: always()
-      with:
-        allure_results: target/allure-results
-        allure_history: allure-history
-
-    - name: Deploy Allure to GitHub Pages
-      if: always()
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: allure-history
+      - name: Deploy Allure Report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
 ```
 
 ---
