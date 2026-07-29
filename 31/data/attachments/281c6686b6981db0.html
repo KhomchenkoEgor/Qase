@@ -1,0 +1,41 @@
+<div>Status code 400 </div>
+
+
+<h4>Body</h4>
+<div>
+    <pre class="preformated-text">
+{
+    &quot;status&quot;: false,
+    &quot;errorMessage&quot;: &quot;Data is invalid.&quot;,
+    &quot;errorFields&quot;: [
+        {
+            &quot;field&quot;: &quot;title&quot;,
+            &quot;error&quot;: &quot;Title is required.&quot;
+        },
+        {
+            &quot;field&quot;: &quot;code&quot;,
+            &quot;error&quot;: &quot;Project code can contain only latin alphabet symbols.&quot;
+        },
+        {
+            &quot;field&quot;: &quot;code&quot;,
+            &quot;error&quot;: &quot;Project code may not be greater than 10 characters.&quot;
+        }
+    ]
+}    </pre>
+</div>
+
+<h4>Headers</h4>
+<div>
+        <div>Transfer-Encoding: chunked</div>
+        <div>RateLimit: &quot;token&quot;;r=990;t=60</div>
+        <div>Strict-Transport-Security: max-age=31536000; includeSubDomains</div>
+        <div>X-RateLimit-Remaining: 990</div>
+        <div>Cache-Control: no-cache, private</div>
+        <div>RateLimit-Policy: &quot;token&quot;;q=1000;w=60</div>
+        <div>Connection: keep-alive</div>
+        <div>X-RateLimit-Limit: 1000</div>
+        <div>Date: Wed, 29 Jul 2026 07:54:26 GMT</div>
+        <div>Content-Type: application/json</div>
+</div>
+
+

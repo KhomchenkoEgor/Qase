@@ -1,0 +1,58 @@
+<div>POST to https://api.qase.io/v1/case/QLP</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;title&quot;: &quot;Проверка корректности входа в систему с валидными учетными данными&quot;,
+    &quot;description&quot;: &quot;Убедиться, что авторизованный пользователь может успешно войти в систему, используя корректные логин и пароль.&quot;,
+    &quot;preconditions&quot;: &quot;Пользователь находится на странице авторизации; система доступна и работает стабильно; учетные данные пользователя валидны&quot;,
+    &quot;postconditions&quot;: &quot;Пользователь успешно авторизован; сессия пользователя активна; страница авторизации закрыта&quot;,
+    &quot;severity&quot;: 2,
+    &quot;priority&quot;: 1,
+    &quot;status&quot;: 1,
+    &quot;steps&quot;: [
+        {
+            &quot;action&quot;: &quot;Ввести валидный логин и пароль в соответствующие поля и нажать кнопку &#39;Войти&#39;.&quot;,
+            &quot;expected_result&quot;: &quot;Отображается главная страница пользователя; в шапке отображается имя пользователя.&quot;
+        },
+        {
+            &quot;action&quot;: &quot;Обновить страницу браузера.&quot;,
+            &quot;expected_result&quot;: &quot;Пользователь остается авторизованным; главная страница загружается без ошибок.&quot;
+        }
+    ]
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Token: [ BLACKLISTED ]</div>
+            <div>Accept: */*</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;https://api.qase.io/v1/case/QLP&#39; -H &#39;Token: [ BLACKLISTED ]&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;title&quot;: &quot;Проверка корректности входа в систему с валидными учетными данными&quot;,
+    &quot;description&quot;: &quot;Убедиться, что авторизованный пользователь может успешно войти в систему, используя корректные логин и пароль.&quot;,
+    &quot;preconditions&quot;: &quot;Пользователь находится на странице авторизации; система доступна и работает стабильно; учетные данные пользователя валидны&quot;,
+    &quot;postconditions&quot;: &quot;Пользователь успешно авторизован; сессия пользователя активна; страница авторизации закрыта&quot;,
+    &quot;severity&quot;: 2,
+    &quot;priority&quot;: 1,
+    &quot;status&quot;: 1,
+    &quot;steps&quot;: [
+        {
+            &quot;action&quot;: &quot;Ввести валидный логин и пароль в соответствующие поля и нажать кнопку &#39;Войти&#39;.&quot;,
+            &quot;expected_result&quot;: &quot;Отображается главная страница пользователя; в шапке отображается имя пользователя.&quot;
+        },
+        {
+            &quot;action&quot;: &quot;Обновить страницу браузера.&quot;,
+            &quot;expected_result&quot;: &quot;Пользователь остается авторизованным; главная страница загружается без ошибок.&quot;
+        }
+    ]
+}&#39;
+    </div>
+
