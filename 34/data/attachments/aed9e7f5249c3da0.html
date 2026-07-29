@@ -1,0 +1,58 @@
+<div>POST to https://api.qase.io/v1/case/QDV</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;title&quot;: &quot;Проверка корректности входа в систему с валидными учетными данными&quot;,
+    &quot;description&quot;: &quot;Убедиться, что пользователь может успешно войти в систему, используя корректные логин и пароль, и попадает на главную страницу профиля.&quot;,
+    &quot;preconditions&quot;: &quot;Пользователь зарегистрирован в системе; браузер открыт на странице входа; интернет-соединение стабильно&quot;,
+    &quot;postconditions&quot;: &quot;Пользователь выходит из системы; кэш браузера очищен&quot;,
+    &quot;severity&quot;: 2,
+    &quot;priority&quot;: 1,
+    &quot;status&quot;: 1,
+    &quot;steps&quot;: [
+        {
+            &quot;action&quot;: &quot;Ввести валидный логин и пароль в соответствующие поля формы входа и нажать кнопку &#39;Войти&#39;.&quot;,
+            &quot;expected_result&quot;: &quot;Система перенаправляет пользователя на главную страницу профиля; отображается приветственное сообщение с именем пользователя.&quot;
+        },
+        {
+            &quot;action&quot;: &quot;Обновить страницу профиля.&quot;,
+            &quot;expected_result&quot;: &quot;Страница профиля загружается корректно; сессия пользователя сохраняется.&quot;
+        }
+    ]
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Token: [ BLACKLISTED ]</div>
+            <div>Accept: */*</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;https://api.qase.io/v1/case/QDV&#39; -H &#39;Token: [ BLACKLISTED ]&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;title&quot;: &quot;Проверка корректности входа в систему с валидными учетными данными&quot;,
+    &quot;description&quot;: &quot;Убедиться, что пользователь может успешно войти в систему, используя корректные логин и пароль, и попадает на главную страницу профиля.&quot;,
+    &quot;preconditions&quot;: &quot;Пользователь зарегистрирован в системе; браузер открыт на странице входа; интернет-соединение стабильно&quot;,
+    &quot;postconditions&quot;: &quot;Пользователь выходит из системы; кэш браузера очищен&quot;,
+    &quot;severity&quot;: 2,
+    &quot;priority&quot;: 1,
+    &quot;status&quot;: 1,
+    &quot;steps&quot;: [
+        {
+            &quot;action&quot;: &quot;Ввести валидный логин и пароль в соответствующие поля формы входа и нажать кнопку &#39;Войти&#39;.&quot;,
+            &quot;expected_result&quot;: &quot;Система перенаправляет пользователя на главную страницу профиля; отображается приветственное сообщение с именем пользователя.&quot;
+        },
+        {
+            &quot;action&quot;: &quot;Обновить страницу профиля.&quot;,
+            &quot;expected_result&quot;: &quot;Страница профиля загружается корректно; сессия пользователя сохраняется.&quot;
+        }
+    ]
+}&#39;
+    </div>
+
