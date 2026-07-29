@@ -1,0 +1,58 @@
+<div>POST to https://api.qase.io/v1/case/QDF</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;title&quot;: &quot;Проверка корзины покупок после добавления товара&quot;,
+    &quot;description&quot;: &quot;Убедиться, что товар корректно добавляется в корзину и отображается в ней с правильным количеством и стоимостью.&quot;,
+    &quot;preconditions&quot;: &quot;Пользователь авторизован на сайте; Корзина пуста; На главной странице отображается товар &#39;Смартфон X&#39; с ценой 50000 рублей&quot;,
+    &quot;postconditions&quot;: &quot;Корзина очищена; Пользователь деавторизован&quot;,
+    &quot;severity&quot;: 2,
+    &quot;priority&quot;: 1,
+    &quot;status&quot;: 1,
+    &quot;steps&quot;: [
+        {
+            &quot;action&quot;: &quot;Нажать кнопку &#39;Добавить в корзину&#39; на карточке товара &#39;Смартфон X&#39;&quot;,
+            &quot;expected_result&quot;: &quot;Товар &#39;Смартфон X&#39; появляется в корзине; Итоговая сумма корзины равна 50000 рублей; Количество товаров в корзине равно 1&quot;
+        },
+        {
+            &quot;action&quot;: &quot;Перейти в корзину и увеличить количество товара &#39;Смартфон X&#39; до 2&quot;,
+            &quot;expected_result&quot;: &quot;Количество товара &#39;Смартфон X&#39; в корзине становится 2; Итоговая сумма корзины обновляется до 100000 рублей&quot;
+        }
+    ]
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Token: [ BLACKLISTED ]</div>
+            <div>Accept: */*</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;https://api.qase.io/v1/case/QDF&#39; -H &#39;Token: [ BLACKLISTED ]&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;title&quot;: &quot;Проверка корзины покупок после добавления товара&quot;,
+    &quot;description&quot;: &quot;Убедиться, что товар корректно добавляется в корзину и отображается в ней с правильным количеством и стоимостью.&quot;,
+    &quot;preconditions&quot;: &quot;Пользователь авторизован на сайте; Корзина пуста; На главной странице отображается товар &#39;Смартфон X&#39; с ценой 50000 рублей&quot;,
+    &quot;postconditions&quot;: &quot;Корзина очищена; Пользователь деавторизован&quot;,
+    &quot;severity&quot;: 2,
+    &quot;priority&quot;: 1,
+    &quot;status&quot;: 1,
+    &quot;steps&quot;: [
+        {
+            &quot;action&quot;: &quot;Нажать кнопку &#39;Добавить в корзину&#39; на карточке товара &#39;Смартфон X&#39;&quot;,
+            &quot;expected_result&quot;: &quot;Товар &#39;Смартфон X&#39; появляется в корзине; Итоговая сумма корзины равна 50000 рублей; Количество товаров в корзине равно 1&quot;
+        },
+        {
+            &quot;action&quot;: &quot;Перейти в корзину и увеличить количество товара &#39;Смартфон X&#39; до 2&quot;,
+            &quot;expected_result&quot;: &quot;Количество товара &#39;Смартфон X&#39; в корзине становится 2; Итоговая сумма корзины обновляется до 100000 рублей&quot;
+        }
+    ]
+}&#39;
+    </div>
+
