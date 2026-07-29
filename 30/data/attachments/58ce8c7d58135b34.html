@@ -1,0 +1,58 @@
+<div>POST to https://api.qase.io/v1/case/SDV</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;title&quot;: &quot;Проверка корректности авторизации пользователя с валидными данными&quot;,
+    &quot;description&quot;: &quot;Убедиться, что пользователь может успешно авторизоваться в системе, используя корректные логин и пароль, и получает доступ к личному кабинету.&quot;,
+    &quot;preconditions&quot;: &quot;Пользователь зарегистрирован в системе; браузер открыт на странице авторизации; интернет-соединение стабильно&quot;,
+    &quot;postconditions&quot;: &quot;Пользователь выходит из системы; кэш браузера очищен&quot;,
+    &quot;severity&quot;: 2,
+    &quot;priority&quot;: 1,
+    &quot;status&quot;: 1,
+    &quot;steps&quot;: [
+        {
+            &quot;action&quot;: &quot;Ввести валидный логин и пароль в соответствующие поля формы авторизации и нажать кнопку &#39;Войти&#39;.&quot;,
+            &quot;expected_result&quot;: &quot;Пользователь перенаправляется на страницу личного кабинета; отображается имя пользователя в шапке сайта.&quot;
+        },
+        {
+            &quot;action&quot;: &quot;Обновить страницу личного кабинета.&quot;,
+            &quot;expected_result&quot;: &quot;Страница личного кабинета загружается корректно; сессия пользователя сохраняется.&quot;
+        }
+    ]
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Token: [ BLACKLISTED ]</div>
+            <div>Accept: */*</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;https://api.qase.io/v1/case/SDV&#39; -H &#39;Token: [ BLACKLISTED ]&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;title&quot;: &quot;Проверка корректности авторизации пользователя с валидными данными&quot;,
+    &quot;description&quot;: &quot;Убедиться, что пользователь может успешно авторизоваться в системе, используя корректные логин и пароль, и получает доступ к личному кабинету.&quot;,
+    &quot;preconditions&quot;: &quot;Пользователь зарегистрирован в системе; браузер открыт на странице авторизации; интернет-соединение стабильно&quot;,
+    &quot;postconditions&quot;: &quot;Пользователь выходит из системы; кэш браузера очищен&quot;,
+    &quot;severity&quot;: 2,
+    &quot;priority&quot;: 1,
+    &quot;status&quot;: 1,
+    &quot;steps&quot;: [
+        {
+            &quot;action&quot;: &quot;Ввести валидный логин и пароль в соответствующие поля формы авторизации и нажать кнопку &#39;Войти&#39;.&quot;,
+            &quot;expected_result&quot;: &quot;Пользователь перенаправляется на страницу личного кабинета; отображается имя пользователя в шапке сайта.&quot;
+        },
+        {
+            &quot;action&quot;: &quot;Обновить страницу личного кабинета.&quot;,
+            &quot;expected_result&quot;: &quot;Страница личного кабинета загружается корректно; сессия пользователя сохраняется.&quot;
+        }
+    ]
+}&#39;
+    </div>
+
