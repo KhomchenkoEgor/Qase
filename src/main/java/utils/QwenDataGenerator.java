@@ -18,7 +18,6 @@ import static io.restassured.RestAssured.given;
 
 public class QwenDataGenerator {
 
-    private static final Logger logger = LoggerFactory.getLogger(QwenDataGenerator.class);
     private static final String MISTRAL_API_URL = "https://api.mistral.ai/v1";
     private static final String MODEL_NAME = "mistral-medium-latest";
     private static final String API_KEY = System.getProperty("mistral_api_key", PropertyReader.getProperty("mistral_api_key"));
@@ -37,7 +36,6 @@ public class QwenDataGenerator {
                 "Do not include any explanations, markdown code blocks (```json), or comments.";
 
         if (API_KEY == null || API_KEY.isEmpty()) {
-            logger.error("MISTRAL_API_KEY не установлен в переменных окружения!");
             return getFallbackJson(userPrompt);
         }
         Map<String, Object> requestBody = Map.of(
@@ -50,19 +48,6 @@ public class QwenDataGenerator {
         );
 
         try {
-            logger.debug("Отправляемый запрос в Mistral API: {}", GSON.toJson(requestBody));
-            String response = given()
-                    .spec(mistralSpec)
-                    .body(GSON.toJson(requestBody))
-                    .when()
-                    .post()
-                    .then()
-                    .statusCode(200)
-                    .extract()
-                    .asString();
-
-            logger.debug("Ответ от Mistral API: {}", response);
-
             return given()
                     .spec(mistralSpec)
                     .body(GSON.toJson(requestBody))
@@ -74,7 +59,7 @@ public class QwenDataGenerator {
                     .jsonPath()
                     .getString("choices[0].message.content");
         } catch (Exception e) {
-            logger.error("Ошибка вызова Mistral API. Применяется локальный резервный хардкод: {}", e.getMessage());
+
             return getFallbackJson(userPrompt);
         }
     }
@@ -122,33 +107,33 @@ public class QwenDataGenerator {
 
     public static CaseRq generateTestCaseData() {
         String prompt = """
-            Generate a JSON for a high-quality QA test case.
-            **CRITICAL**: preconditions and postconditions MUST be **single strings**, NOT arrays!
-            Use semicolons (;) to separate multiple conditions.
-            Schema criteria:
-            - title: Meaningful test case title in Russian language.
-            - description: Detailed test scenario objective in Russian.
-            - preconditions: **Single string** with initial test conditions in Russian, separated by semicolons.
-            - postconditions: **Single string** with cleanup or expected global state in Russian, separated by semicolons.
-            - severity: integer (1 for Blocker, 2 for Critical, 3 for Major).
-            - priority: integer (1 for High, 2 for Medium, 3 for Low).
-            - status: integer (strictly 1).
-            - steps: Array of 2 realistic test steps. Each step must contain fields:
-              * action: user interaction text in Russian.
-              * expected_result: verification outcome text in Russian.
-            """;
+                Generate a JSON for a high-quality QA test case.
+                **CRITICAL**: preconditions and postconditions MUST be **single strings**, NOT arrays!
+                Use semicolons (;) to separate multiple conditions.
+                Schema criteria:
+                - title: Meaningful test case title in Russian language.
+                - description: Detailed test scenario objective in Russian.
+                - preconditions: **Single string** with initial test conditions in Russian, separated by semicolons.
+                - postconditions: **Single string** with cleanup or expected global state in Russian, separated by semicolons.
+                - severity: integer (1 for Blocker, 2 for Critical, 3 for Major).
+                - priority: integer (1 for High, 2 for Medium, 3 for Low).
+                - status: integer (strictly 1).
+                - steps: Array of 2 realistic test steps. Each step must contain fields:
+                  * action: user interaction text in Russian.
+                  * expected_result: verification outcome text in Russian.
+                """;
         return GSON.fromJson(generateJsonViaLlm(prompt), CaseRq.class);
     }
 
     public static PlanRq generatePlanData(List<Integer> caseIds) {
         String prompt = String.format("""
-            Generate a JSON object for a release test plan.
-            CRITICAL: Every field must be a primitive type. No nested objects allowed!
-            Schema criteria:
-            - title: Name of the test plan (e.g., 'Regression Sprint 12') strictly as a single string.
-            - description: Objectives of this testing cycle strictly as a single text string in Russian.
-            - cases: This array MUST be exactly this list of integers: %s
-            """, caseIds.toString());
+                Generate a JSON object for a release test plan.
+                CRITICAL: Every field must be a primitive type. No nested objects allowed!
+                Schema criteria:
+                - title: Name of the test plan (e.g., 'Regression Sprint 12') strictly as a single string.
+                - description: Objectives of this testing cycle strictly as a single text string in Russian.
+                - cases: This array MUST be exactly this list of integers: %s
+                """, caseIds.toString());
 
         try {
             String jsonResponse = generateJsonViaLlm(prompt);
@@ -201,7 +186,7 @@ public class QwenDataGenerator {
             String response = generateJsonViaLlm(prompt);
             return response.replaceAll("\"", "").replaceAll("\\{", "").replaceAll("\\}", "").trim();
         } catch (Exception e) {
-            return "invalid-email-" + (int)(Math.random() * 10000);
+            return "invalid-email-" + (int) (Math.random() * 10000);
         }
     }
 

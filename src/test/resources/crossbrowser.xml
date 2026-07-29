@@ -10,19 +10,37 @@
 
     <test name="UI Tests - Google Chrome">
         <parameter name="browser" value="chrome"/>
-        <groups><run><include name="regression"/></run></groups>
-        <packages><package name="tests.ui"/></packages>
+        <groups>
+            <run>
+                <include name="regression"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="tests.ui"/>
+        </packages>
     </test>
 
     <test name="UI Tests - Mozilla Firefox">
         <parameter name="browser" value="firefox"/>
-        <groups><run><include name="regression"/></run></groups>
-        <packages><package name="tests.ui"/></packages>
+        <groups>
+            <run>
+                <include name="regression"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="tests.ui"/>
+        </packages>
     </test>
 
     <test name="UI Tests - Microsoft Edge">
         <parameter name="browser" value="edge"/>
-        <groups><run><include name="regression"/></run></groups>
-        <packages><package name="tests.ui"/></packages>
+        <groups>
+            <run>
+                <include name="regression"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="tests.ui"/>
+        </packages>
     </test>
 </suite>

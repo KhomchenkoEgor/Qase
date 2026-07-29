@@ -43,7 +43,6 @@ public class BaseTest {
         Configuration.timeout = 30000;
         Configuration.clickViaJs = true;
         Configuration.browserSize = "1920x1080";
-        Configuration.headless = true;
         Configuration.browser = browser;
 
         if (browser.equalsIgnoreCase("chrome")) {
@@ -62,7 +61,23 @@ public class BaseTest {
             Configuration.browserCapabilities = options;
         } else if (browser.equalsIgnoreCase("edge")) {
             EdgeOptions options = new EdgeOptions();
-            options.addArguments("--headless");
+            options.addArguments(
+                    "--headless",
+                    "--incognito",
+                    "--disable-notifications",
+                    "--disable-popup-blocking",
+                    "--disable-infobars"
+            );
+            Configuration.browserCapabilities = options;
+        } else if (browser.equalsIgnoreCase("firefox")) {
+            FirefoxOptions options = new FirefoxOptions();
+            options.addArguments(
+                    "--headless",
+                    "--incognito",
+                    "--disable-notifications",
+                    "--disable-popup-blocking",
+                    "--disable-infobars"
+            );
             Configuration.browserCapabilities = options;
         }
 

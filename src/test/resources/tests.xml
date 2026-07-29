@@ -21,10 +21,4 @@
         </packages>
     </test>
 
-    <test name="Phase 3 - UI Tests Edge">
-        <parameter name="browser" value="edge"/>
-        <packages>
-            <package name="tests.ui"/>
-        </packages>
-    </test>
 </suite>
