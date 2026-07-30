@@ -85,8 +85,8 @@
     └── test
         ├── java
         │   ├── listeners     # TestListener, RetryListener
-        │   ├── tests/api     # BaseApiTest + 5 API-теста
-        │   ├── tests/ui      # BaseTest + 4 UI-теста
+        │   ├── tests/api     # BaseApiTest + 8 API-теста
+        │   ├── tests/ui      # BaseTest + 6 UI-теста
         │   └── utils         # AllureUtils, Retry
         └── resources
             ├── schemas/create_project_schema.json
